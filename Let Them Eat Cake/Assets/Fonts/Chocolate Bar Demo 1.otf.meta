@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: b2ac23ac656f06d42bbbdab623b33b7a
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Chocolate Bar Demo
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 0250d05005bb6bd4c9680fc1f196e266, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

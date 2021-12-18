@@ -1,0 +1,300 @@
+
+<html>
+<head>
+  <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <script type="text/javascript" src="https://www.airconsole.com/api/airconsole-1.7.0.js"></script>
+  <link rel="stylesheet" type="text/css" href="./joystick.css">
+  <link rel="stylesheet" type="text/css" href="./Button/button.css">
+  <link rel="stylesheet" href="./Dpad/dpad.css">
+  <script type="text/javascript" src="./joystick.js"></script>
+  <script type="text/javascript" src="./rate-limiter.js"></script>
+  <script type="text/javascript" src="./Button/button.js"></script>
+  <script type="text/javascript" src="./Dpad/dpad.js"></script>  
+  <style type=text/css>
+  /* the style sheet dictates what our elements (buttons, backgrounds etc.) will look like. */
+
+      body {
+        -ms-user-select: none;
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        user-select: none;
+      }
+
+
+      .example-container {
+        position: relative;
+        background-color: #FDEBD0;
+        text-align: center;
+        font-family: sans-serif;
+        display: inline-block;
+        width: 100%;
+        height: 100%;
+        max-width: 720px;
+        max-height: 360px;
+      }
+
+      /* You need to explicitly position your joystick */
+      #joystick_left {
+        position: absolute;
+        width: 45%;
+        height: 90%;
+        top: 5%;
+        left: 5%;
+        display: none;
+      }
+
+      #button-rectangular {
+        position: absolute;
+        width: 100%;
+        height: 20%;
+        top: 60%;
+        display: none;
+        font-family: Verdana, Tahoma;
+      }
+
+      #button-start {
+        position: absolute;
+        width: 100%;
+        height: 20%;
+        top: 60%;
+        display: none;
+        font-family: Verdana, Tahoma;
+      }
+
+      #input-name {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 50%;
+        margin-top: 10%;
+        right: 5%;
+        left: 5%;
+        font-family: Comic Sans MS, Verdana, Tahoma;
+      }
+
+      #intro-hint {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        height: 50%;
+        margin-top: 15%;
+        right: 5%;
+        left: 5%;
+        font-family: Comic Sans MS, Verdana, Tahoma;
+      }
+
+      #hint-text {
+        font-size: 24px;
+        color: #803F32;
+        font-weight: 1000;
+        margin-bottom: 20px;
+        font-family: Comic Sans MS, Verdana, Tahoma;
+      }
+
+      #guide-text {
+        font-size: 24px;
+        color: #803F32;
+        font-weight: 1000;
+        margin-bottom: 20px;
+        font-family: Comic Sans MS, Verdana, Tahoma;
+      }
+      
+      #player-text {
+        font-size: 24px;
+        color: white;
+        margin-bottom: 20px;
+        font-family: Comic Sans MS, Verdana, Tahoma;
+      }
+
+      #fname {
+        width: 50%;
+        margin-left: 25%;
+        margin-right: 25%;
+        font-size: 24px;
+        font-family: Comic Sans MS, Verdana, Tahoma;
+      }
+
+      #dpad-2 {
+        position: absolute;
+        width: 45%;
+        height: 100%;
+        top: 0px;
+        left: 5%;
+        display: none;
+      }
+
+      #button-jump {
+        position: absolute;
+        width: 40%;
+        height: 100%;
+        right: 5%;
+        top: 0px;
+        display: none;
+        font-family: Comic Sans MS, Verdana, Tahoma;
+      }
+
+  </style>
+</head>
+<body>
+  <div id="container" class="example-container">
+    <div id="input-name" class="inputText">
+      <label for="fname" id="hint-text">After see the game scene,<br>please input your name</label>
+      <input type="text" id="fname" name="fname" required="required"><br><br>
+    </div>
+    <div id="button-rectangular" class="button-300-150">
+      <div class="button-text">Connect</div>
+    </div>
+
+    <div id="intro-hint" class="inputText">
+      <label for="introHint" id="player-text"></label>
+      <label for="introHint" id="guide-text">Waiting for the other Player</label>
+    </div>
+    <div id="button-start" class="button-300-150">
+      <div class="button-text">Start</div>
+    </div>
+
+    <!-- <div id="joystick_left" class="joystick">
+      <div class="joystick-relative">
+        <div class="joystick-relative-stick"></div>
+      </div>
+    </div>  -->
+    <div id="dpad-2">
+      <div>
+        <div class="dpad-arrow dpad-arrow-up"></div>
+        <div class="dpad-arrow dpad-arrow-down"></div>
+        <div class="dpad-arrow dpad-arrow-left"></div>
+        <div class="dpad-arrow dpad-arrow-right"></div>
+      </div>
+    </div>
+    <div id="button-jump" class="button-300-150">
+      <div class="button-text">JUMP</div>
+    </div>
+  </div>
+  <script type="text/javascript">
+    var airconsole = new AirConsole({"orientation":"landscape"});
+    var rateLimiter = new RateLimiter(airconsole);
+    
+    // var joystick_left = new Joystick("joystick_left", {
+    //   "distance": 0.2,
+    //   "touchstart": function() {
+    //     rateLimiter.message(AirConsole.SCREEN, {
+    //       "joystick_left": {
+    //         touch: true
+    //       }
+    //     });
+    //   },
+    //   "touchmove": function(position) {
+    //     console.log("touchmove called");
+    //     rateLimiter.message(AirConsole.SCREEN, {
+    //       "joystick_left": {
+    //         position: position
+    //       }
+    //     });
+    //   },
+    //   "touchend": function(had_direction) {
+    //     rateLimiter.message(AirConsole.SCREEN, {
+    //       "joystick_left": {
+    //         touch: false
+    //       }
+    //     });
+    //   }
+    // });
+
+    const nameIput = document.querySelector("input");
+    const connectButton = document.getElementById("button-rectangular");
+    nameIput.addEventListener('input', (e) => {
+        if (e.target.value.length > 0) connectButton.style.display = "block";
+        else connectButton.style.display = "none";
+      }
+    );
+
+    var rectangular = new Button("button-rectangular", {
+        "down": function() {
+          var name = document.getElementById("fname").value.toString();
+          airconsole.message(AirConsole.SCREEN, {
+            "playerName" : name
+          });
+          document.getElementById("input-name").style.display = "none";
+          document.getElementById("button-rectangular").style.display = "none";
+          document.getElementById("intro-hint").style.display = "flex";
+        }
+    });
+
+    var startButton = new Button("button-start", {
+      "down": function() {
+          airconsole.message(AirConsole.SCREEN, {
+            "start" : true
+          });
+          document.getElementById("intro-hint").style.display = "none";
+          document.getElementById("button-start").style.display = "none";
+          document.getElementById("dpad-2").style.display = "inline";
+          document.getElementById("button-jump").style.display = "inline";
+        }      
+    })
+
+    var dpad2 = new DPad("dpad-2", {
+    "directionchange": function(key, pressed) {
+      airconsole.message(AirConsole.SCREEN, {
+        "dpad2": {
+          "directionchange": {
+            "key": key,
+            "pressed": pressed
+          }
+        }
+      });
+    },
+    "touchstart": function() {
+      airconsole.message(AirConsole.SCREEN, {
+        "dpad2": {
+          "touch": true
+        }
+      });
+    },
+    "touchend": function(had_direction) {
+      airconsole.message(AirConsole.SCREEN, {
+        "dpad2": {
+          "touch": false,
+          "had_direction": had_direction
+        }
+      });
+    }
+  });
+
+  var jumpButton = new Button("button-jump", {
+        "down": function() {
+          airconsole.message(AirConsole.SCREEN, {
+            "jump" : true
+          });
+        }
+    });
+
+  airconsole.onMessage = function(device_id, data) {
+      var id = data.connect;
+      var container = document.getElementsByClassName("example-container")[0];
+      var playerText = document.getElementById("player-text");
+      var hintText = document.getElementById("guide-text");
+
+      // buttonText[0].innerText = ;
+      if (id == "Left Leg")  
+      {
+        container.style.backgroundColor = '#84D38F';
+        playerText.innerText = "You are LEFT LEG!";
+        hintText.innerText = "Please read the game introduction on screen";
+        setTimeout(() => {  
+            document.getElementById("button-start").style.display = "block";
+        }, 2000);
+      }
+      else if (id == "Right Leg")
+      {
+        container.style.backgroundColor = '#F17D99';
+        playerText.innerText = "You are RIGHT LEG!";
+        hintText.innerText = "Please read the game introduction on screen";
+        setTimeout(() => {  
+            document.getElementById("button-start").style.display = "block";
+        }, 2000);
+      }
+  }
+    
+    </script>
+</body>
+</html>
